@@ -1,5 +1,5 @@
 class OrderItemsController < ApplicationController
-  before_action :set_order_item, only: [:show, :edit, :update, :destroy]
+  before_action :set_order_item, only: [:show, :edit, :destroy]
   before_action :load_order, only: [:create]
 
   # GET /order_items/1/edit
@@ -11,7 +11,9 @@ class OrderItemsController < ApplicationController
   def create
     #@order_item = OrderItem.new(order_item_params)
     #@order_item = OrderItem.new(product_id: params[:product_id], order_id: @order.id)
-    @order_item = @order.order_items.new(quantity: 1, product_id: params[:product_id])
+    #@order_item = @order.order_items.new(quantity: 1, product_id: params[:product_id])
+    @order_item = @order.order_items.find_or_initialize_by(product_id: params[:product_id])
+    @order_item.quantity += 1
 
     respond_to do |format|
       if @order_item.save
@@ -27,14 +29,14 @@ class OrderItemsController < ApplicationController
   # PATCH/PUT /order_items/1
   # PATCH/PUT /order_items/1.json
   def update
-    respond_to do |format|
-      if @order_item.update(order_item_params)
-        format.html { redirect_to @order_item, notice: 'Order item was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @order_item.errors, status: :unprocessable_entity }
-      end
+    @order_item = OrderItem.find(params[:id])
+    if order_item_params[:quantity].to_i == 0
+      @order_item.destroy
+      redirect_to @order_item.order, notice: 'Order item was removed.'
+    elsif @order_item.update(order_item_params)
+      redirect_to @order_item.order, notice: 'Order item was successfully updated.'
+    else
+      render 'edit'
     end
   end
 
