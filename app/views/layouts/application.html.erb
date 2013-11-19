@@ -13,7 +13,17 @@
         <p>Your online grocery</p>
       </div>
 
-      <!--<p style="color: green"> <%= flash[:notice] %></p>-->
+      <p style="color: green"> <%= flash[:notice] %></p>
+
+      <!-- Login/Logout -->
+      <div id="account">
+        <% if current_user %>
+            <span>Welcome <%= current_user.name %></span>
+            <%= link_to 'Logout', logout_path, id: 'logout' %>
+        <% else %>
+            <%= link_to 'Login', login_path, id: 'login' %>
+        <% end %>
+      </div>
 
       <div class="sidebar">
         (sidebar)

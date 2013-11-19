@@ -61,17 +61,17 @@ class OrderItemsController < ApplicationController
       params.require(:order_item).permit(:product_id, :order_id, :quantity)
     end
 
-    def load_order
-      #begin
-      #  @order = Order.find(session[:order_id])
-      #rescue ActiveRecord::RecordNotFound
-      #  @order = Order.create(status: 'unsubmitted')
-      #  session[:order_id] = @order.id
-      #end
-      @order = Order.find_or_initialize_by_id(session[:order_id], status: 'unsubmitted')
-      if @order.new_record?
-        @order.save!
-        session[:order_id] = @order.id
-      end
-    end
+    #def load_order
+    #  #begin
+    #  #  @order = Order.find(session[:order_id])
+    #  #rescue ActiveRecord::RecordNotFound
+    #  #  @order = Order.create(status: 'unsubmitted')
+    #  #  session[:order_id] = @order.id
+    #  #end
+    #  @order = Order.find_or_initialize_by_id(session[:order_id], status: 'unsubmitted', user_id: session[:user_id])
+    #  if @order.new_record?
+    #    @order.save!
+    #    session[:order_id] = @order.id
+    #  end
+    #end
 end
